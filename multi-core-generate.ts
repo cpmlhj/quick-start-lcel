@@ -2,7 +2,7 @@ import dot from 'dotenv'
 import { ChatOpenAI } from '@langchain/openai'
 import { ChatPromptTemplate } from '@langchain/core/prompts'
 import { StringOutputParser } from '@langchain/core/output_parsers'
-import { RunnablePassthrough } from '@langchain/core/runnables'
+import { RunnablePassthrough, RunnableMap } from '@langchain/core/runnables'
 import { HttpsProxyAgent } from 'https-proxy-agent'
 
 dot.config()
@@ -10,6 +10,7 @@ dot.config()
 	const model = new ChatOpenAI({
 		model: 'gpt-4',
 		configuration: {
+			baseURL: process.env.OPENAI_BASE_URL,
 			httpAgent: new HttpsProxyAgent(process.env.HTTP_PROXY || '')
 		}
 	})
@@ -92,15 +93,19 @@ dot.config()
             `
 		}
 	])
-		.pipe(model.bind({ configurable: { model: 'gpt-4o-mini' } }))
+		.pipe(model.bind({ configurable: { model: 'gpt-4o' } }))
 		.pipe(new StringOutputParser())
 
 	const chain = planner
 		.pipe(() =>
-			RunnablePassthrough.assign({
+			RunnableMap.from({
 				Java: java_chain,
 				Python: python_chain,
-				Typescript: ts_chain,
+				Typescript: ts_chain
+			})
+		)
+		.pipe(() =>
+			RunnablePassthrough.assign({
 				origin_response: (input) => input.base_question
 			})
 		)
