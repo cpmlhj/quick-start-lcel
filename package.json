@@ -1,0 +1,26 @@
+{
+	"name": "LCEL-RAG",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "tsx rag.ts",
+		"code": "tsx multi-core-generate.ts"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@langchain/community": "^0.3.32",
+		"@langchain/core": "^0.3.40",
+		"@langchain/openai": "^0.4.4",
+		"@types/html-to-text": "^9.0.4",
+		"chromadb": "^1.10.4",
+		"dotenv": "^16.4.7",
+		"html-to-text": "^9.0.5",
+		"https-proxy-agent": "^7.0.6",
+		"langchain": "^0.3.18",
+		"playwright": "^1.51.1",
+		"tsx": "^4.19.3"
+	}
+}
